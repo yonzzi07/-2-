@@ -1,4 +1,10 @@
+import json
+from pathlib import Path
+
 from quiz import Quiz
+
+STATE_PATH = Path(__file__).parent / "state.json"
+
 
 def get_default_quizzes():
     return [
@@ -12,9 +18,77 @@ def get_default_quizzes():
 
 class QuizGame:
     def __init__(self):
+        self.reset_to_default()
+        self.load_state()
+    
+    def reset_to_default(self):
         self.quizzes = get_default_quizzes()
         self.best_score = None
+        self.best_correct = None
+        self.best_total = None
+
+    def is_valid_quiz_data(self, item):
+        if not isinstance(item, dict):
+            return False
+        question = item.get("question")
+        choices = item.get("choices")
+        answer = item.get("answer")
+        if not isinstance(question, str) or question.strip() == "":
+            return False
+        if not isinstance(choices, list) or len(choices) != 4:
+            return False
+        for choice in choices:
+            if not isinstance(choice, str) or choice.strip() == "":
+                return False
+        if not isinstance(answer, int):
+            return False
+        return 1 <= answer <= 4
+
+
+    def load_state(self):
+        if not STATE_PATH.exists():
+            print("저장된 데이터가 없어 기본 퀴즈로 시작합니다.")
+            return
+        try:
+            with open(STATE_PATH, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            quizzes = []
+            for item in data["quizzes"]:
+                if not self.is_valid_quiz_data(item):
+                    raise ValueError("잘못된 퀴즈 데이터")
+                quizzes.append(Quiz.from_dict(item))
+            self.quizzes = quizzes
+            self.best_score = data.get("best_score")
+            self.best_correct = data.get("best_correct")
+            self.best_total = data.get("best_total")
+            print(f"저장된 데이터를 불러왔습니다. (퀴즈 {len(self.quizzes)}개)")
+        except (json.JSONDecodeError, KeyError, TypeError, ValueError):
+            print("데이터 파일이 손상되어 기본 퀴즈로 복구합니다.")
+            self.reset_to_default()
+            self.save_state()
+        except OSError:
+            print("데이터 파일을 읽을 수 없어 기본 퀴즈로 시작합니다.")
+            self.reset_to_default()
+
     
+    def save_state(self):
+        data = {
+            "quizzes": [quiz.to_dict() for quiz in self.quizzes],
+            "best_score": self.best_score,
+            "best_correct": self.best_correct,
+            "best_total": self.best_total,
+        }
+        try:
+            with open(STATE_PATH, "w", encoding="utf-8") as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+        except OSError:
+            print("데이터를 저장하지 못했습니다.")
+
+
+
+
+
+
     def show_menu(self):
         print("=" * 40)
         print("나만의 퀴즈 게임")
@@ -90,6 +164,7 @@ class QuizGame:
             elif choice == 3:
                 self.list_quizzes()
             elif choice == 5:
+                self.save_state()
                 print("프로그램을 종료합니다.")
                 break
             else:
