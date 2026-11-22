@@ -42,11 +42,43 @@ class QuizGame:
                 continue
             return number
 
+    def play_quiz(self):
+        if not self.quizzes:
+            print("등록된 퀴즈가 없습니다. 먼저 퀴즈를 추가하세요.")
+            return
+
+        total = len(self.quizzes)
+        correct = 0
+        print(f"퀴즈를 시작합니다! (총 {total}문제)")
+        print("-" * 40)
+
+        for number, quiz in enumerate(self.quizzes, start=1):
+            quiz.display(number)
+            user_answer = self.get_number("정답 입력: ", 1, 4)
+            if quiz.is_correct(user_answer):
+                print("정답입니다!")
+                correct += 1
+            else:
+                answer_text = quiz.choices[quiz.answer - 1]
+                print(f"오답입니다. 정답은 {quiz.answer}번 {answer_text}입니다.")
+            
+            print("-" * 40)
+        
+        score = round(correct / total * 100)
+        print("=" * 40)
+        print(f"결과: {total}문제 중 {correct}문제 정답! ({score}점)")
+        print("=" * 40)
+
+
+
+
     def run(self):
         while True:
             self.show_menu()
             choice = self.get_number("선택: ", 1, 5)
-            if choice == 5:
+            if choice == 1:
+                self.play_quiz()
+            elif choice == 5:
                 print("프로그램을 종료합니다.")
                 break
             else:
