@@ -8,3 +8,47 @@ def get_default_quizzes():
         Quiz("원/달러 환율이 오르면 유리한 쪽은?", ["수출 기업", "해외여행객", "수입 기업", "해외 유학생"], 1),
         Quiz("경기 침체 속에서 물가가 오르는 현상은?", ["인플레이션", "디플레이션", "스태그플레이션", "리플레이션"], 3)
     ]
+
+
+class QuizGame:
+    def __init__(self):
+        self.quizzes = get_default_quizzes()
+        self.best_score = None
+    
+    def show_menu(self):
+        print("=" * 40)
+        print("나만의 퀴즈 게임")
+        print("=" * 40)
+        print("1. 퀴즈 풀기")
+        print("2. 퀴즈 추가")
+        print("3. 퀴즈 목록")
+        print("4. 점수 확인")
+        print("5. 종료")
+        print("=" * 40)
+    
+    def get_number(self, prompt, min_value, max_value):
+        while True:
+            text = input(prompt).strip()
+            if text == "":
+                print("입력이 비었습니다. 다시 입력하세요.")
+                continue
+            try:
+                number = int(text)
+            except ValueError:
+                print(f"숫자를 입력하세요. ({min_value}-{max_value})")
+                continue
+            if not (min_value <= number <= max_value):
+                print(f"{min_value}-{max_value} 사이의 숫자를 입력하세요.")
+                continue
+            return number
+
+    def run(self):
+        while True:
+            self.show_menu()
+            choice = self.get_number("선택: ", 1, 5)
+            if choice == 5:
+                print("프로그램을 종료합니다.")
+                break
+            else:
+                print("준비 중인 기능입니다.")
+

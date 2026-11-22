@@ -21,5 +21,3 @@ class Quiz:
         return cls(data["question"], data["choices"], data["answer"])
 
 
-Quiz("1+1은?", ["1", "2", "3", "4"], 2).display(1)
-
