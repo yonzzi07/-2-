@@ -116,6 +116,29 @@ class QuizGame:
                 continue
             return number
 
+    def get_text(self, prompt):
+        while True:
+            text = input(prompt).strip()
+            if text == "":
+                print("내용을 입력해 주세요.")
+                continue
+            return text
+
+    def add_quiz(self):
+        print("새로운 퀴즈를 추가합니다.")
+        question = self.get_text("문제를 입력하세요: ")
+        choices = []
+        for i in range(1, 5):
+            choice = self.get_text(f"선택지 {i}: ")
+            choices.append(choice)
+        answer = self.get_number("정답 번호 (1-4): ", 1, 4)
+        self.quizzes.append(Quiz(question, choices, answer))
+        self.save_state()
+        print("퀴즈가 추가되었습니다!")
+
+
+
+
     def play_quiz(self):
         if not self.quizzes:
             print("등록된 퀴즈가 없습니다. 먼저 퀴즈를 추가하세요.")
@@ -161,6 +184,8 @@ class QuizGame:
             choice = self.get_number("선택: ", 1, 5)
             if choice == 1:
                 self.play_quiz()
+            elif choice == 2:
+                self.add_quiz()
             elif choice == 3:
                 self.list_quizzes()
             elif choice == 5:
