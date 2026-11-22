@@ -69,7 +69,16 @@ class QuizGame:
         print(f"결과: {total}문제 중 {correct}문제 정답! ({score}점)")
         print("=" * 40)
 
+    def list_quizzes(self):
+        if not self.quizzes:
+            print("등록된 퀴즈가 없습니다.")
+            return
 
+        print(f"등록된 퀴즈 목록 (총 {len(self.quizzes)}개)")
+        print("-" * 40)
+        for number, quiz in enumerate(self.quizzes, start=1):
+            print(f"[{number}] {quiz.question}")
+        print("-" * 40)
 
 
     def run(self):
@@ -78,6 +87,8 @@ class QuizGame:
             choice = self.get_number("선택: ", 1, 5)
             if choice == 1:
                 self.play_quiz()
+            elif choice == 3:
+                self.list_quizzes()
             elif choice == 5:
                 print("프로그램을 종료합니다.")
                 break
