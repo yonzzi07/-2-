@@ -61,7 +61,14 @@ class QuizGame:
             self.best_score = data.get("best_score")
             self.best_correct = data.get("best_correct")
             self.best_total = data.get("best_total")
-            print(f"저장된 데이터를 불러왔습니다. (퀴즈 {len(self.quizzes)}개)")
+            if self.best_score is None:
+                score_text = "최고 점수 없음"
+            else:
+                score_text = f"최고 점수 {self.best_score}점"
+            print(f"저장된 데이터를 불러왔습니다. (퀴즈 {len(self.quizzes)}개, {score_text})")
+
+
+
         except (json.JSONDecodeError, KeyError, TypeError, ValueError):
             print("데이터 파일이 손상되어 기본 퀴즈로 복구합니다.")
             self.reset_to_default()
@@ -83,9 +90,6 @@ class QuizGame:
                 json.dump(data, f, ensure_ascii=False, indent=2)
         except OSError:
             print("데이터를 저장하지 못했습니다.")
-
-
-
 
 
 
@@ -166,6 +170,15 @@ class QuizGame:
         print(f"결과: {total}문제 중 {correct}문제 정답! ({score}점)")
         print("=" * 40)
 
+        if self.best_score is None or score > self.best_score:
+            self.best_score = score
+            self.best_correct = correct
+            self.best_total = total
+            self.save_state()
+            print("새로운 최고 점수입니다!")
+
+
+
     def list_quizzes(self):
         if not self.quizzes:
             print("등록된 퀴즈가 없습니다.")
@@ -178,6 +191,14 @@ class QuizGame:
         print("-" * 40)
 
 
+    def show_score(self):
+        if self.best_score is None:
+            print("아직 퀴즈를 푼 기록이 없습니다.")
+            return
+        print(f"최고 점수: {self.best_score}점 ({self.best_total}문제 중 {self.best_correct}문제 정답)")
+
+
+
     def run(self):
         while True:
             self.show_menu()
@@ -188,6 +209,8 @@ class QuizGame:
                 self.add_quiz()
             elif choice == 3:
                 self.list_quizzes()
+            elif choice == 4:
+                self.show_score()                
             elif choice == 5:
                 self.save_state()
                 print("프로그램을 종료합니다.")
