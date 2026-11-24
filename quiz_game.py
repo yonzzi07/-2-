@@ -216,8 +216,6 @@ class QuizGame:
                     self.save_state()
                     print("프로그램을 종료합니다.")
                     break
-                else:
-                    print("준비 중인 기능입니다.")
         except (KeyboardInterrupt, EOFError):
             print("\n입력이 중단되어 저장 후 종료합니다.")
             self.save_state()
