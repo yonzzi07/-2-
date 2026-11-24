@@ -358,3 +358,14 @@ git push
 ![잘못된 입력](docs/screenshots/invalid_input.png)
 ### 재실행 후 데이터 유지
 ![재실행](docs/screenshots/restart.png)
+
+
+
+
+
+
+
+## 8. clone/pull 실습
+- 저장소를 별도 폴더(quiz-game-clone)에 `git clone`으로 복제
+- 복제본에서 README에 이 섹션을 추가한 뒤 `commit` → `push`
+- 기존 작업 폴더(quiz-game)에서 `git pull`로 변경사항을 받아와 반영 확인
