@@ -200,21 +200,25 @@ class QuizGame:
 
 
     def run(self):
-        while True:
-            self.show_menu()
-            choice = self.get_number("선택: ", 1, 5)
-            if choice == 1:
-                self.play_quiz()
-            elif choice == 2:
-                self.add_quiz()
-            elif choice == 3:
-                self.list_quizzes()
-            elif choice == 4:
-                self.show_score()                
-            elif choice == 5:
-                self.save_state()
-                print("프로그램을 종료합니다.")
-                break
-            else:
-                print("준비 중인 기능입니다.")
+        try:
+            while True:
+                self.show_menu()
+                choice = self.get_number("선택: ", 1, 5)
+                if choice == 1:
+                    self.play_quiz()
+                elif choice == 2:
+                    self.add_quiz()
+                elif choice == 3:
+                    self.list_quizzes()
+                elif choice == 4:
+                    self.show_score()
+                elif choice == 5:
+                    self.save_state()
+                    print("프로그램을 종료합니다.")
+                    break
+                else:
+                    print("준비 중인 기능입니다.")
+        except (KeyboardInterrupt, EOFError):
+            print("\n입력이 중단되어 저장 후 종료합니다.")
+            self.save_state()
 
